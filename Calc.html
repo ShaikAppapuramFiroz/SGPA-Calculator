@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGPA Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+      padding: 20px;
+      color: #333;
+      animation: fadeIn 1s ease-in;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      animation: slideInDown 0.8s ease-out;
+    }
+
+    label, input, button {
+      font-size: 1rem;
+      margin: 5px;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      padding: 5px;
+      border: 2px solid #66a6ff;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #333;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .subject-inputs {
+      margin-top: 20px;
+      animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    .subject-inputs div {
+      margin: 10px 0;
+    }
+
+    button {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      color: #222;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes slideInDown {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <h1>SGPA Calculator</h1>
+  <label for="subjectCount">Enter number of subjects (including labs): </label>
+  <input type="number" id="subjectCount" min="1">
+  <button onclick="generateInputs()">Submit</button>
+
+  <div id="inputsContainer" class="subject-inputs"></div>
+
+  <button onclick="calculateSGPA()" style="display:none;" id="calculateBtn">Calculate SGPA</button>
+  <h2 id="result"></h2>
+
+  <script>
+    function generateInputs() {
+      const count = parseInt(document.getElementById("subjectCount").value);
+      const container = document.getElementById("inputsContainer");
+      const calculateBtn = document.getElementById("calculateBtn");
+      container.innerHTML = "";
+
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.innerHTML = `Subject ${i + 1}: 
+          Grade Point: <input type="number" min="0" max="10" id="grade${i}" required>
+          Credit: <input type="number" min="0" id="credit${i}" required>`;
+        container.appendChild(div);
+      }
+
+      calculateBtn.style.display = 'inline-block';
+    }
+
+    function calculateSGPA() {
+      const count = parseInt(document.getElementById("subjectCount").value);
+      let totalCredits = 0;
+      let weightedSum = 0;
+
+      for (let i = 0; i < count; i++) {
+        const grade = parseFloat(document.getElementById(`grade${i}`).value);
+        const credit = parseFloat(document.getElementById(`credit${i}`).value);
+
+        if (isNaN(grade) || isNaN(credit)) {
+          alert("Please enter valid numbers for all grade and credit inputs.");
+          return;
+        }
+
+        weightedSum += grade * credit;
+        totalCredits += credit;
+      }
+
+      const sgpa = weightedSum / totalCredits;
+      const resultText = document.getElementById("result");
+      resultText.innerText = `Your SGPA is: ${sgpa.toFixed(2)}`;
+      resultText.style.animation = 'fadeIn 1s ease-in-out';
+    }
+  </script>
+</body>
+  </html>
+    
